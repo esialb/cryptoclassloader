@@ -27,7 +27,7 @@
 								<artifactItem>
 									<groupId>org.cryptoclassloader</groupId>
 									<artifactId>cryptoclassloader-test-encrypt</artifactId>
-									<version>0.0.1-SNAPSHOT</version>
+									<version>${project.version}</version>
 									<destFileName>cryptoclassloader-test-encrypt.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
