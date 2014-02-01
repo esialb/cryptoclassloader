@@ -28,7 +28,7 @@ public class TestSelf {
 		try {
 			cl.loadClass("org.cryptoclassloader.test.encrypt.Self");
 			Assert.fail("class wasn't encrypted");
-		} catch(ClassFormatError e) {
+		} catch(Throwable t) {
 			// expected
 		}
 	}
