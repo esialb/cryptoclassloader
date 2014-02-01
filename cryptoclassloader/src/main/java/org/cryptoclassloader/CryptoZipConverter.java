@@ -31,10 +31,13 @@ public class CryptoZipConverter {
 	public void convert(ZipFile zip, OutputStream out) throws IOException, GeneralSecurityException {
 		ZipOutputStream zout = new ZipOutputStream(out);
 		Enumeration<? extends ZipEntry> zee = zip.entries();
+		boolean marked = false;
 		while(zee.hasMoreElements()) {
 			ZipEntry ze = zee.nextElement();
 			if(ze.isDirectory())
 				continue;
+			if("META-INF/org.cryptoclassloader/true".equals(ze.getName()))
+				marked = true;
 			InputStream in = zip.getInputStream(ze);
 			zout.putNextEntry(new ZipEntry(ze.getName()));
 			OutputStream eout = new NoCloseOutputStream(zout);
@@ -47,8 +50,10 @@ public class CryptoZipConverter {
 			eout.close();
 			zout.closeEntry();
 		}
-		zout.putNextEntry(new ZipEntry("META-INF/org.cryptoclassloader/true"));
-		zout.closeEntry();
+		if(!marked) {
+			zout.putNextEntry(new ZipEntry("META-INF/org.cryptoclassloader/true"));
+			zout.closeEntry();
+		}
 		zout.finish();
 	}
 }

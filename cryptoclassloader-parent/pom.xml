@@ -10,7 +10,6 @@
 		<module>../cryptoclassloader-maven-plugin</module>
 		<module>../cryptoclassloader-test-encrypt</module>
 		<module>../cryptoclassloader-test-decrypt</module>
-		<module>../cryptoclassloader-test-system</module>
 	</modules>
 
 	<build>
