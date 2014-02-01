@@ -38,7 +38,8 @@ public class CryptoZipConverter {
 			InputStream in = zip.getInputStream(ze);
 			zout.putNextEntry(new ZipEntry(ze.getName()));
 			OutputStream eout = new NoCloseOutputStream(zout);
-			eout = new AESOutputStream(eout, key);
+			if(!ze.getName().startsWith("META-INF/"))
+				eout = new AESOutputStream(eout, key);
 			
 			byte[] buf = new byte[1024];
 			for(int r = in.read(buf); r != -1; r = in.read(buf))

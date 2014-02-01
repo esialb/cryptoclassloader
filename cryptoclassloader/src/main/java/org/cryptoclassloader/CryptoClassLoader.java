@@ -75,6 +75,8 @@ public class CryptoClassLoader extends URLClassLoader {
 	public InputStream getResourceAsStream(String name) {
 		try {
 			InputStream in = super.getResourceAsStream(name);
+			if(name.startsWith("META-INF/"))
+				return in;
 			if(in == null)
 				return null;
 			return new AESInputStream(in, key);
