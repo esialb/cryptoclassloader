@@ -41,6 +41,20 @@ public class CryptoClassLoader extends URLClassLoader {
 			throw new ClassNotFoundException(name, e);
 		}
 	}
+	
+	@Override
+	public InputStream getResourceAsStream(String name) {
+		try {
+			InputStream in = super.getResourceAsStream(name);
+			if(in == null)
+				return null;
+			return new AESInputStream(in, key);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} catch (GeneralSecurityException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 
 }
