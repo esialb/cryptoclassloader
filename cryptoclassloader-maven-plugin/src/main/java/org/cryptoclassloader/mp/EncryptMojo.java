@@ -14,7 +14,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.cryptoclassloader.CryptoZipConverter;
 
-@Mojo(name = "encrypy")
+@Mojo(name = "encrypt")
 public class EncryptMojo extends AbstractMojo {
 
 	@Parameter(property = "project.build.directory", readonly = true)
@@ -42,6 +42,7 @@ public class EncryptMojo extends AbstractMojo {
 		}
 		key = Arrays.copyOf(key, 16);
 		
+		precrypto.delete();
 		if(!packaged.renameTo(precrypto))
 			throw new MojoFailureException("Unable to rename " + packaged + " to " + precrypto);
 		try {

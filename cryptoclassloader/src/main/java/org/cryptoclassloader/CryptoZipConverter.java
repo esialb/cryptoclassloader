@@ -18,6 +18,7 @@ public class CryptoZipConverter {
 
 		@Override
 		public void close() throws IOException {
+			flush();
 		}
 	}
 	
@@ -32,8 +33,10 @@ public class CryptoZipConverter {
 		Enumeration<? extends ZipEntry> zee = zip.entries();
 		while(zee.hasMoreElements()) {
 			ZipEntry ze = zee.nextElement();
+			if(ze.isDirectory())
+				continue;
 			InputStream in = zip.getInputStream(ze);
-			zout.putNextEntry(ze);
+			zout.putNextEntry(new ZipEntry(ze.getName()));
 			OutputStream eout = new NoCloseOutputStream(zout);
 			eout = new AESOutputStream(eout, key);
 			
