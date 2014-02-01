@@ -16,8 +16,8 @@ public class CryptoClassLoader extends URLClassLoader {
 		this.key = key;
 	}
 	
-	protected CryptoClassLoader(ClassLoader parent, byte[] key) {
-		super(new URL[0], parent);
+	public CryptoClassLoader(byte[] key, ClassLoader parent, URL... urls) throws IOException {
+		super(urls, parent);
 		this.key = key;
 	}
 	

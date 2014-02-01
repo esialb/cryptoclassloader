@@ -6,7 +6,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
 
-class EmptyClassLoader extends ClassLoader {
+public class EmptyClassLoader extends ClassLoader {
 
 	@Override
 	public Class<?> loadClass(String name) throws ClassNotFoundException {
