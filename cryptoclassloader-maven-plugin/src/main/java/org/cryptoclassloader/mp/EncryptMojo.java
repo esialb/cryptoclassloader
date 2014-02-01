@@ -35,7 +35,7 @@ public class EncryptMojo extends AbstractMojo {
 	 * The string representation of the encryption key to use.
 	 * The actual key is a truncated SHA-1 hash of this string.
 	 */
-	@Parameter(property = "cryproclassloader.key", required=true)
+	@Parameter(property = "cryptoclassloader.key", required=true)
 	private String key;
 	
 	/**
