@@ -13,9 +13,9 @@ import org.junit.Test;
 public class TestSelf {
 	@Test
 	public void testSelf() throws Exception {
-		byte[] key = CryptoClassLoader.toKey("foobar");
-		
-		ClassLoader cl = new CryptoClassLoader(key, new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURL());
+		ClassLoader cl = new CryptoClassLoader(
+				"foobar", 
+				new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURL());
 		
 		Class<?> Self = cl.loadClass("org.cryptoclassloader.test.encrypt.Self");
 		Method Self_self = Self.getMethod("self", Object.class);

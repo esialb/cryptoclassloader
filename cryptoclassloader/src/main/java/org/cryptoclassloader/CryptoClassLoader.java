@@ -37,6 +37,14 @@ public class CryptoClassLoader extends URLClassLoader {
 		this.key = key;
 	}
 	
+	public CryptoClassLoader(String key, URL... urls) throws IOException {
+		this(toKey(key), urls);
+	}
+	
+	public CryptoClassLoader(String key, ClassLoader parent, URL... urls) throws IOException {
+		this(toKey(key), parent, urls);
+	}
+	
 	@Override
 	protected Class<?> findClass(String name) throws ClassNotFoundException {
 		String resource = name.replaceAll("\\.", "/") + ".class";

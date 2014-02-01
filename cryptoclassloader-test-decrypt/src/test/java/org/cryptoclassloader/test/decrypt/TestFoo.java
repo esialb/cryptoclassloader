@@ -13,9 +13,9 @@ import org.junit.Test;
 public class TestFoo {
 	@Test
 	public void testFoo() throws Exception {
-		byte[] key = CryptoClassLoader.toKey("foobar");
-		
-		ClassLoader cl = new CryptoClassLoader(key, new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURL());
+		ClassLoader cl = new CryptoClassLoader(
+				"foobar", 
+				new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURL());
 		
 		Assert.assertEquals("foo", IOUtils.toString(cl.getResourceAsStream("org/cryptoclassloader/test/encrypt/foo.txt")));
 	}
