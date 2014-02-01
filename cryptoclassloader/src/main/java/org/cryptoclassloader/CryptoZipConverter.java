@@ -47,6 +47,8 @@ public class CryptoZipConverter {
 			eout.close();
 			zout.closeEntry();
 		}
+		zout.putNextEntry(new ZipEntry("META-INF/org.cryptoclassloader/true"));
+		zout.closeEntry();
 		zout.finish();
 	}
 }

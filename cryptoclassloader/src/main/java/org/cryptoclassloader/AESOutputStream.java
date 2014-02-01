@@ -11,7 +11,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class AESOutputStream extends CipherOutputStream {
+class AESOutputStream extends CipherOutputStream {
 	private static Cipher getAes(OutputStream out, byte[] key) throws IOException, GeneralSecurityException {
 		Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
 		byte[] iv = new byte[16];

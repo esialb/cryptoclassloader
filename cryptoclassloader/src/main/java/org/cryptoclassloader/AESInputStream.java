@@ -9,7 +9,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class AESInputStream extends CipherInputStream {
+class AESInputStream extends CipherInputStream {
 	private static Cipher getAes(InputStream in, byte[] key) throws IOException, GeneralSecurityException {
 		Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
 		byte[] iv = new byte[16];
