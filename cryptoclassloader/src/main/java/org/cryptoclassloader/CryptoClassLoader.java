@@ -17,9 +17,9 @@ import javax.crypto.CipherInputStream;
 
 /**
  * {@link ClassLoader} that decrypts classes and resources using AES-128
- * and {@link CipherInputStream}s.  Takes as a key either a 16-byte array
- * or a string.  If a string, the string is hashed with SHA-1 and truncated
- * to 16 bytes. <p>
+ * and {@link CipherInputStream}s.  Takes a {@link CryptoStreamProvider}
+ * as an argument for handling the decryption.  If instead a {@code byte[]}
+ * or {@link String} is provided they are used as keys for {@link AES}.
  * 
  * {@link CryptoClassLoader} extends {@link URLClassLoader} and will decrypt the
  * contents of the URLs provided at construction time. <p>
