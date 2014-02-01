@@ -17,12 +17,23 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * {@link CryptoStreamProvider} that uses AES-128
+ * @author robin
+ *
+ */
 public class AES implements CryptoStreamProvider {
 	
-	public static final int KEY_SIZE = 16;
-	public static final int IV_SIZE = 16;
+	private static final int KEY_SIZE = 16;
+	private static final int IV_SIZE = 16;
 
-	public static byte[] toKey(String ascii) {
+	/**
+	 * Convert a {@link String} to a {@code byte[]} of the appropriate
+	 * length to be an AES-128 key by truncating a SHA-1 hash of the string
+	 * @param ascii
+	 * @return
+	 */
+	private static byte[] toKey(String ascii) {
 		try {
 			MessageDigest sha1 = MessageDigest.getInstance("SHA1");
 			byte[] key = sha1.digest(ascii.getBytes("UTF-8"));
@@ -34,18 +45,37 @@ public class AES implements CryptoStreamProvider {
 		}
 	}
 
+	/**
+	 * The key
+	 */
 	protected byte[] key;
 	
+	/**
+	 * Create an AES-1238 {@link CryptoStreamProvider}
+	 * @param key
+	 */
 	public AES(byte[] key) {
 		if(key.length != KEY_SIZE)
 			throw new IllegalArgumentException("Illegal key size");
 		this.key = key;
 	}
 	
+	/**
+	 * Create an AES-128 {@link CryptoStreamProvider}
+	 * @param key
+	 */
 	public AES(String key) {
 		this(toKey(key));
 	}
 	
+	/**
+	 * Returns a {@link Cipher} to decrypt an {@link InputStream}
+	 * @param in
+	 * @param key
+	 * @return
+	 * @throws IOException
+	 * @throws GeneralSecurityException
+	 */
 	private static Cipher getAesDecipher(InputStream in, byte[] key) throws IOException, GeneralSecurityException {
 		Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
 		byte[] iv = new byte[IV_SIZE];
@@ -61,6 +91,14 @@ public class AES implements CryptoStreamProvider {
 		return new CipherInputStream(in, getAesDecipher(in, key));
 	}
 
+	/**
+	 * Returns a {@link Cipher} to encrypt an {@link OutputStream}
+	 * @param out
+	 * @param key
+	 * @return
+	 * @throws IOException
+	 * @throws GeneralSecurityException
+	 */
 	private static Cipher getAesEncipher(OutputStream out, byte[] key) throws IOException, GeneralSecurityException {
 		Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
 		byte[] iv = new byte[IV_SIZE];
