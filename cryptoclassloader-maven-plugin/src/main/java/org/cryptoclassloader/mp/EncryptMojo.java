@@ -12,6 +12,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.cryptoclassloader.CryptoClassLoader;
 import org.cryptoclassloader.CryptoZipConverter;
 
 @Mojo(name = "encrypt")
@@ -34,13 +35,7 @@ public class EncryptMojo extends AbstractMojo {
 		File packaged = new File(buildDirectory + "/" + finalName + "." + packaging);
 		File precrypto = new File(buildDirectory + "/" + finalName + "-precrypto." + packaging);
 		
-		byte[] key;
-		try {
-			key = this.key.getBytes("UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new MojoExecutionException(e.toString(), e);
-		}
-		key = Arrays.copyOf(key, 16);
+		byte[] key = CryptoClassLoader.toKey(this.key);
 		
 		precrypto.delete();
 		if(!packaged.renameTo(precrypto))
