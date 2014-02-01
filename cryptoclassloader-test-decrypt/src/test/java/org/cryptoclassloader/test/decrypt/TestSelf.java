@@ -21,7 +21,6 @@ public class TestSelf {
 		Method Self_self = Self.getMethod("self", Object.class);
 		
 		Assert.assertEquals("foo", Self_self.invoke(null, "foo"));
-		
 	}
 	
 	@Test
