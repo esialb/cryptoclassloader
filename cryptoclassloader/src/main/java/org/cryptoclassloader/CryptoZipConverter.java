@@ -37,17 +37,22 @@ public class CryptoZipConverter {
 		}
 	}
 	
-	/**
-	 * The encryption key
-	 */
-	protected byte[] key;
+	protected CryptoStreamProvider crypto;
 	
 	/**
 	 * Create a new {@link ZipFile} encryptor with the specified key
 	 * @param key
 	 */
 	public CryptoZipConverter(byte[] key) {
-		this.key = key;
+		this(new AES(key));
+	}
+	
+	public CryptoZipConverter(String key) {
+		this(new AES(key));
+	}
+	
+	public CryptoZipConverter(CryptoStreamProvider crypto) {
+		this.crypto = crypto;
 	}
 	
 	/**
@@ -69,7 +74,7 @@ public class CryptoZipConverter {
 			zout.putNextEntry(new ZipEntry(ze.getName()));
 			OutputStream eout = new NoCloseOutputStream(zout);
 			if(!ze.getName().startsWith("META-INF/"))
-				eout = new AESOutputStream(eout, key);
+				eout = crypto.encrypting(eout);
 			
 			byte[] buf = new byte[1024];
 			for(int r = in.read(buf); r != -1; r = in.read(buf))

@@ -9,16 +9,18 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class AESStreamTest {
+public class AESTest {
 	@Test
 	public void testStreams() throws Exception {
+		CryptoStreamProvider aes = new AES("foo");
+		
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
-		OutputStream out = new AESOutputStream(bout, new byte[16]);
+		OutputStream out = aes.encrypting(bout);
 		out.write("foo".getBytes());
 		out.close();
 		
 		ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
-		InputStream in = new AESInputStream(bin, new byte[16]);
+		InputStream in = aes.decrypting(bin);
 		Assert.assertEquals("foo", new String(IOUtils.toByteArray(in)));
 		
 	}

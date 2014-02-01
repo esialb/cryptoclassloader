@@ -35,80 +35,32 @@ import javax.crypto.CipherInputStream;
  */
 public class CryptoClassLoader extends URLClassLoader {
 	
-	/**
-	 * Convert a string to a key to be used with {@link CryptoClassLoader}.
-	 * Computes a SHA-1 hash of the string and then truncates the hash
-	 * to 16 bytes
-	 * @param ascii
-	 * @return
-	 */
-	public static byte[] toKey(String ascii) {
-		try {
-			MessageDigest sha1 = MessageDigest.getInstance("SHA1");
-			byte[] key = sha1.digest(ascii.getBytes("UTF-8"));
-			return Arrays.copyOf(key, AES.KEY_SIZE);
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException("No SHA1", e);
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("No UTF-8", e);
-		}
-	}
+	protected CryptoStreamProvider crypto;
 	
-	/**
-	 * The key used by the {@link CryptoClassLoader}
-	 */
-	protected byte[] key;
-	
-	/**
-	 * Create a new {@link CryptoClassLoader} with the specified 16-byte key
-	 * and {@link URL}s
-	 * @param key
-	 * @param urls
-	 * @throws IOException
-	 */
-	public CryptoClassLoader(byte[] key, URL... urls) throws IOException {
+	public CryptoClassLoader(CryptoStreamProvider crypto, URL... urls) throws IOException {
 		super(urls);
-		this.key = key;
-		if(key.length != AES.KEY_SIZE)
-			throw new IllegalArgumentException("invalid key length");
+		this.crypto = crypto;
 	}
 	
-	/**
-	 * Create a new {@link CryptoClassLoader} with the specified 16-byte key, 
-	 * parent {@link ClassLoader}, and {@link URL}s
-	 * 
-	 * @param key
-	 * @param parent
-	 * @param urls
-	 * @throws IOException
-	 */
-	public CryptoClassLoader(byte[] key, ClassLoader parent, URL... urls) throws IOException {
+	public CryptoClassLoader(CryptoStreamProvider crypto, ClassLoader parent, URL... urls) throws IOException {
 		super(urls, parent);
-		this.key = key;
-		if(key.length != AES.KEY_SIZE)
-			throw new IllegalArgumentException("invalid key length");
+		this.crypto = crypto;
+	}
+
+	public CryptoClassLoader(byte[] key, URL... urls) throws IOException {
+		this(new AES(key), urls);
 	}
 	
-	/**
-	 * Create a {@link CryptoClassLoader} from a {@link String} key and {@link URL}s
-	 * @param key
-	 * @param urls
-	 * @throws IOException
-	 */
+	public CryptoClassLoader(byte[] key, ClassLoader parent, URL... urls) throws IOException {
+		this(new AES(key), parent, urls);
+	}
+	
 	public CryptoClassLoader(String key, URL... urls) throws IOException {
-		this(toKey(key), urls);
+		this(new AES(key), urls);
 	}
 	
-	/**
-	 * Create a {@link CryptoClassLoader} from a {@link String} key and {@link URL}s with
-	 * a parent {@link ClassLoader}
-	 * @param key
-	 * @param parent
-	 * @param urls
-	 * @throws IOException
-	 */
 	public CryptoClassLoader(String key, ClassLoader parent, URL... urls) throws IOException {
-		this(toKey(key), parent, urls);
+		this(new AES(key), parent, urls);
 	}
 	
 	@Override
@@ -190,7 +142,7 @@ public class CryptoClassLoader extends URLClassLoader {
 		@Override
 		public InputStream getInputStream() throws IOException {
 			try {
-				return new AESInputStream(new URL(url.toString()).openStream(), key);
+				return crypto.decrypting(new URL(url.toString()).openStream());
 			} catch (GeneralSecurityException e) {
 				throw new IOException(e);
 			}
