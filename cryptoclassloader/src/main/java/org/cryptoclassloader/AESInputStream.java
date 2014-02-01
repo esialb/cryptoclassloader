@@ -12,7 +12,7 @@ import javax.crypto.spec.SecretKeySpec;
 class AESInputStream extends CipherInputStream {
 	private static Cipher getAes(InputStream in, byte[] key) throws IOException, GeneralSecurityException {
 		Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
-		byte[] iv = new byte[16];
+		byte[] iv = new byte[AES.IV_SIZE];
 		in.read(iv);
 		IvParameterSpec ivps = new IvParameterSpec(iv);
 		SecretKey skey = new SecretKeySpec(key, "AES");

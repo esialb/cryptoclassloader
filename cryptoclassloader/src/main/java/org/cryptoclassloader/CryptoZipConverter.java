@@ -10,24 +10,54 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * Utility class to encrypt a {@link ZipFile} to an {@link OutputStream},
+ * writing a new zip file to the stream. <p>
+ * 
+ * All entries are encrypted unless they begin with META-INF/
+ * @author robin
+ *
+ */
 public class CryptoZipConverter {
-	protected static class NoCloseOutputStream extends FilterOutputStream {
+	/**
+	 * Stream which doesn't close its wrapped stream when {@link #close()}
+	 * is called
+	 * @author robin
+	 *
+	 */
+	private static class NoCloseOutputStream extends FilterOutputStream {
 		public NoCloseOutputStream(OutputStream out) {
 			super(out);
 		}
 
 		@Override
 		public void close() throws IOException {
+			// flush only
 			flush();
 		}
 	}
 	
+	/**
+	 * The encryption key
+	 */
 	protected byte[] key;
 	
+	/**
+	 * Create a new {@link ZipFile} encryptor with the specified key
+	 * @param key
+	 */
 	public CryptoZipConverter(byte[] key) {
 		this.key = key;
 	}
 	
+	/**
+	 * Convert the {@link ZipFile} argument to a new zip file, written to the argument
+	 * {@link OutputStream}, with all but the META-INF/ entries encrypted.
+	 * @param zip
+	 * @param out
+	 * @throws IOException
+	 * @throws GeneralSecurityException
+	 */
 	public void convert(ZipFile zip, OutputStream out) throws IOException, GeneralSecurityException {
 		ZipOutputStream zout = new ZipOutputStream(out);
 		Enumeration<? extends ZipEntry> zee = zip.entries();

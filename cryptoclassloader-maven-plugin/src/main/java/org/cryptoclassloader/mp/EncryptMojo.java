@@ -13,6 +13,12 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.cryptoclassloader.CryptoClassLoader;
 import org.cryptoclassloader.CryptoZipConverter;
 
+/**
+ * Plugin to encrypt the primary artifact, suitable for use
+ * with {@link CryptoClassLoader}
+ * @author robin
+ *
+ */
 @Mojo(name = "encrypt")
 public class EncryptMojo extends AbstractMojo {
 
@@ -24,10 +30,17 @@ public class EncryptMojo extends AbstractMojo {
 	
 	@Parameter(property = "project.packaging", readonly = true)
 	private String packaging;
-	
+
+	/**
+	 * The string representation of the encryption key to use.
+	 * The actual key is a truncated SHA-1 hash of this string.
+	 */
 	@Parameter(property = "cryproclassloader.key", required=true)
 	private String key;
 	
+	/**
+	 * Encrypt the primary artifact
+	 */
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		File packaged = new File(buildDirectory + "/" + finalName + "." + packaging);
