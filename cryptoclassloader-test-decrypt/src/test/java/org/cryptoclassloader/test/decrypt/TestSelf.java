@@ -4,8 +4,6 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Arrays;
-
 import org.cryptoclassloader.CryptoClassLoader;
 import org.junit.Assert;
 import org.junit.Test;

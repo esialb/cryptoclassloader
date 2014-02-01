@@ -3,8 +3,6 @@ package org.cryptoclassloader.mp;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.zip.ZipFile;
 
 import org.apache.maven.plugin.AbstractMojo;
