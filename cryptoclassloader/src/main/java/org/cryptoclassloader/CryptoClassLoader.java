@@ -31,30 +31,74 @@ import javax.crypto.CipherInputStream;
  */
 public class CryptoClassLoader extends URLClassLoader {
 	
+	/**
+	 * The object responsible for providing decryption streams
+	 */
 	protected CryptoStreamProvider crypto;
 	
+	/**
+	 * Create a {@link CryptoClassLoader} with a {@link CryptoStreamProvider} and an
+	 * array of {@link URL}s to encrypted jars
+	 * @param crypto
+	 * @param urls
+	 * @throws IOException
+	 */
 	public CryptoClassLoader(CryptoStreamProvider crypto, URL... urls) throws IOException {
 		super(urls);
 		this.crypto = crypto;
 	}
 	
+	/**
+	 * Create a {@link CryptoClassLoader} with a {@link CryptoStreamProvider}, a specified parent
+	 * {@link ClassLoader}, and an array of {@link URL}s to encrypted jars
+	 * @param crypto
+	 * @param parent
+	 * @param urls
+	 * @throws IOException
+	 */
 	public CryptoClassLoader(CryptoStreamProvider crypto, ClassLoader parent, URL... urls) throws IOException {
 		super(urls, parent);
 		this.crypto = crypto;
 	}
 
+	/**
+	 * Create a {@link CryptoClassLoader} using {@link AES}
+	 * @param key
+	 * @param urls
+	 * @throws IOException
+	 */
 	public CryptoClassLoader(byte[] key, URL... urls) throws IOException {
 		this(new AES(key), urls);
 	}
 	
+	/**
+	 * Create a {@link CryptoClassLoader} using {@link AES} and a parent {@link ClassLoader}
+	 * @param key
+	 * @param parent
+	 * @param urls
+	 * @throws IOException
+	 */
 	public CryptoClassLoader(byte[] key, ClassLoader parent, URL... urls) throws IOException {
 		this(new AES(key), parent, urls);
 	}
 	
+	/**
+	 * Create a {@link CryptoClassLoader} using {@link AES}
+	 * @param key
+	 * @param urls
+	 * @throws IOException
+	 */
 	public CryptoClassLoader(String key, URL... urls) throws IOException {
 		this(new AES(key), urls);
 	}
 	
+	/**
+	 * Create a {@link CryptoClassLoader} using {@link AES} and a parent {@link ClassLoader}
+	 * @param key
+	 * @param parent
+	 * @param urls
+	 * @throws IOException
+	 */
 	public CryptoClassLoader(String key, ClassLoader parent, URL... urls) throws IOException {
 		this(new AES(key), parent, urls);
 	}
@@ -89,6 +133,11 @@ public class CryptoClassLoader extends URLClassLoader {
 		}
 	}
 	
+	/**
+	 * Return a {@link URL} that, when opened, decrypts the normal contents
+	 * @param url
+	 * @return
+	 */
 	protected URL cryptoURL(URL url) {
 		if(url == null)
 			return null;
@@ -116,6 +165,12 @@ public class CryptoClassLoader extends URLClassLoader {
 		return Collections.enumeration(urls);
 	}
 	
+	/**
+	 * {@link URLStreamHandler} that makes its {@link URL}s open their
+	 * {@link URLConnection}s with {@link CryptoConnection}
+	 * @author robin
+	 *
+	 */
 	protected class Handler extends URLStreamHandler {
 
 		@Override
@@ -125,6 +180,11 @@ public class CryptoClassLoader extends URLClassLoader {
 		
 	}
 	
+	/**
+	 * {@link URLConnection} that decrypts the normal content of the {@link URL}
+	 * @author robin
+	 *
+	 */
 	protected class CryptoConnection extends URLConnection {
 
 		protected CryptoConnection(URL url) {
