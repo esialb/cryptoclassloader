@@ -63,6 +63,7 @@ public class CryptoZipConverter {
 	 * @throws IOException
 	 * @throws GeneralSecurityException
 	 */
+	@SuppressWarnings("resource")
 	public void convert(ZipFile zip, OutputStream out) throws IOException, GeneralSecurityException {
 		ZipOutputStream zout = new ZipOutputStream(out);
 		Enumeration<? extends ZipEntry> zee = zip.entries();
