@@ -4,12 +4,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 
 import javax.crypto.CipherInputStream;
 
@@ -118,7 +124,6 @@ public class CryptoClassLoader extends URLClassLoader {
 		try {
 			InputStream in = url.openStream();
 			try {
-				in = new AESInputStream(in, key);
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 				byte[] buf = new byte[1024];
@@ -133,24 +138,69 @@ public class CryptoClassLoader extends URLClassLoader {
 			}
 		} catch (IOException e) {
 			throw new ClassNotFoundException(name, e);
-		} catch (GeneralSecurityException e) {
-			throw new ClassNotFoundException(name, e);
 		}
+	}
+	
+	protected URL cryptoURL(URL url) {
+		if(url == null)
+			return null;
+		try {
+			return new URL(url, url.toString(), new Handler());
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	@Override
+	public URL findResource(String name) {
+		return cryptoURL(super.findResource(name));
+	}
+	
+	@Override
+	public Enumeration<URL> findResources(String name) throws IOException {
+		List<URL> urls = Collections.list(super.findResources(name));
+		for(int i = 0; i < urls.size(); i++)
+			urls.set(i, cryptoURL(urls.get(i)));
+		return Collections.enumeration(urls);
+	}
+	
+	protected class Handler extends URLStreamHandler {
+
+		@Override
+		protected URLConnection openConnection(URL u) throws IOException {
+			return new CryptoConnection(u);
+		}
+		
+	}
+	
+	protected class CryptoConnection extends URLConnection {
+
+		protected CryptoConnection(URL url) {
+			super(url);
+		}
+
+		@Override
+		public void connect() throws IOException {
+		}
+		
+		@Override
+		public InputStream getInputStream() throws IOException {
+			try {
+				return new AESInputStream(new URL(url.toString()).openStream(), key);
+			} catch (GeneralSecurityException e) {
+				throw new IOException(e);
+			}
+		}
+		
 	}
 	
 	@Override
 	public InputStream getResourceAsStream(String name) {
 		try {
-			InputStream in = super.getResourceAsStream(name);
-			// decrypt the resource stream, unless it starts with META-INF/
 			if(name.startsWith("META-INF/"))
-				return in;
-			if(in == null)
-				return null;
-			return new AESInputStream(in, key);
+				return super.findResource(name).openStream();
+			return findResource(name).openStream();
 		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (GeneralSecurityException e) {
 			throw new RuntimeException(e);
 		}
 	}

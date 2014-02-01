@@ -19,6 +19,17 @@ public class TestFoo {
 	}
 	
 	@Test
+	public void testFooURL() throws Exception {
+		ClassLoader cl = new CryptoClassLoader(
+				"foobar", 
+				new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURI().toURL());
+
+		URL foo = cl.getResource("org/cryptoclassloader/test/encrypt/foo.txt");
+		Assert.assertEquals("foo", IOUtils.toString(foo));
+		
+	}
+	
+	@Test
 	public void testFooWithoutDecryption() throws Exception {
 		ClassLoader cl = new URLClassLoader(new URL[] {new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURI().toURL()});
 
