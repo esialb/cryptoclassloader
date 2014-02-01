@@ -8,6 +8,7 @@
 	<modules>
 		<module>../cryptoclassloader</module>
 		<module>../cryptoclassloader-maven-plugin</module>
+		<module>../cryptoclassloader-test-encrypt</module>
 	</modules>
 
 	<build>
