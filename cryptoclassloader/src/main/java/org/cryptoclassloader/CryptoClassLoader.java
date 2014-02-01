@@ -153,11 +153,15 @@ public class CryptoClassLoader extends URLClassLoader {
 	
 	@Override
 	public URL findResource(String name) {
+		if(name.startsWith("META-INF/"))
+			return super.findResource(name);
 		return cryptoURL(super.findResource(name));
 	}
 	
 	@Override
 	public Enumeration<URL> findResources(String name) throws IOException {
+		if(name.startsWith("META-INF/"))
+			return super.findResources(name);
 		List<URL> urls = Collections.list(super.findResources(name));
 		for(int i = 0; i < urls.size(); i++)
 			urls.set(i, cryptoURL(urls.get(i)));
