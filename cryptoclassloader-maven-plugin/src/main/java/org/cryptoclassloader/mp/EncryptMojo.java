@@ -46,13 +46,19 @@ public class EncryptMojo extends AbstractMojo {
 		File packaged = new File(buildDirectory + "/" + finalName + "." + packaging);
 		File precrypto = new File(buildDirectory + "/" + finalName + "-precrypto." + packaging);
 		
-		precrypto.delete();
+		if(precrypto.exists()) {
+			getLog().info("Deleting old pre-crypto backup:" + precrypto.getName());
+			precrypto.delete();
+		}
+		getLog().info("Renaming " + packaged.getName() + " to " + precrypto.getName());
 		if(!packaged.renameTo(precrypto))
 			throw new MojoFailureException("Unable to rename " + packaged + " to " + precrypto);
+		
 		try {
 			ZipFile zf = new ZipFile(precrypto);
 			OutputStream out = new FileOutputStream(packaged);
 			try {
+				getLog().info("Encrypting " + precrypto.getName() + " to " + packaged.getName());
 				new CryptoZipConverter(key).convert(zf, out);
 			} finally {
 				out.close();
@@ -60,6 +66,7 @@ public class EncryptMojo extends AbstractMojo {
 		} catch(Exception e) {
 			throw new MojoExecutionException(e.toString(), e);
 		}
+		
 	}
 
 }
