@@ -5,6 +5,34 @@
 	<artifactId>cryptoclassloader-parent</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+	<description>Parent POM for CryptoClassLoader</description>
+	<name>cryptoclassloader-parent</name>
+	<url>http://cryptoclassloader.org/</url>
+	<licenses>
+		<license>
+			<name>BSD</name>
+			<url>http://cryptoclassloader.org/wiki/index.php/BSD_License</url>
+		</license>
+	</licenses>
+	<scm>
+		<url>git@github.com:esialb/cryptoclassloader.git</url>
+		<connection>scm:git:git@github.com:esialb/cryptoclassloader.git</connection>
+		<developerConnection>scm:git:git@github.com:esialb/cryptoclassloader.git</developerConnection>
+	</scm>
+	<developers>
+		<developer>
+			<id>robin</id>
+			<email>robin.kirkman@gmail.com</email>
+			<name>Robin Kirkman</name>
+		</developer>
+	</developers>
+
 	<modules>
 		<module>../cryptoclassloader</module>
 		<module>../cryptoclassloader-maven-plugin</module>
@@ -37,9 +65,4 @@
 		</pluginManagement>
 	</build>
 
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
 </project>

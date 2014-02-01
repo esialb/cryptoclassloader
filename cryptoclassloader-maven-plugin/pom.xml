@@ -56,4 +56,6 @@
 		</plugins>
 	</build>
 
+	<name>cryptoclassloader-maven-plugin</name>
+	<description>Maven plugin for creating jars usable with CryptoClassLoader</description>
 </project>
