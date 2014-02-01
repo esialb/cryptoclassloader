@@ -13,14 +13,14 @@ public class TestFoo {
 	public void testFoo() throws Exception {
 		ClassLoader cl = new CryptoClassLoader(
 				"foobar", 
-				new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURL());
+				new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURI().toURL());
 		
 		Assert.assertEquals("foo", IOUtils.toString(cl.getResourceAsStream("org/cryptoclassloader/test/encrypt/foo.txt")));
 	}
 	
 	@Test
 	public void testFooWithoutDecryption() throws Exception {
-		ClassLoader cl = new URLClassLoader(new URL[] {new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURL()});
+		ClassLoader cl = new URLClassLoader(new URL[] {new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURI().toURL()});
 
 		Assert.assertFalse("foo".equals(IOUtils.toString(cl.getResourceAsStream("org/cryptoclassloader/test/encrypt/foo.txt"))));
 	}

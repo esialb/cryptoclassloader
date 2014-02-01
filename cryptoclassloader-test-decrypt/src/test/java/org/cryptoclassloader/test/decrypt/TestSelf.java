@@ -13,7 +13,7 @@ public class TestSelf {
 	public void testSelf() throws Exception {
 		ClassLoader cl = new CryptoClassLoader(
 				"foobar", 
-				new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURL());
+				new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURI().toURL());
 		
 		Class<?> Self = cl.loadClass("org.cryptoclassloader.test.encrypt.Self");
 		Method Self_self = Self.getMethod("self", Object.class);
@@ -23,10 +23,10 @@ public class TestSelf {
 	
 	@Test
 	public void testSelfWithoutDecryption() throws Exception {
-		ClassLoader cl = new URLClassLoader(new URL[] {new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURL()});
+		ClassLoader cl = new URLClassLoader(new URL[] {new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURI().toURL()});
 
 		try {
-			Class<?> Self = cl.loadClass("org.cryptoclassloader.test.encrypt.Self");
+			cl.loadClass("org.cryptoclassloader.test.encrypt.Self");
 			Assert.fail("class wasn't encrypted");
 		} catch(ClassFormatError e) {
 			// expected
