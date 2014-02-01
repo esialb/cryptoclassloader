@@ -33,7 +33,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../cryptoclassloader-parent</relativePath>
 	</parent>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -42,12 +42,15 @@
 				<version>3.2</version>
 				<executions>
 					<execution>
+						<id>default-descriptor</id>
 						<phase>process-classes</phase>
-						<goals><goal>descriptor</goal></goals>
+						<goals>
+							<goal>descriptor</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
 		</plugins>
 	</build>
-	
+
 </project>
