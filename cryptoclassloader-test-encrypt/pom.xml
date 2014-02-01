@@ -8,14 +8,6 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../cryptoclassloader-parent</relativePath>
 	</parent>
-	<dependencies>
-		<dependency>
-			<groupId>org.cryptoclassloader</groupId>
-			<artifactId>cryptoclassloader-maven-plugin</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<type>maven-plugin</type>
-		</dependency>
-	</dependencies>
 
 	<build>
 		<plugins>
