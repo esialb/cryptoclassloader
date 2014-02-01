@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -14,25 +15,21 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-public class CryptoClassLoader extends ClassLoader {
+public class CryptoClassLoader extends URLClassLoader {
 	
-	protected File file;
-	protected ZipFile zip;
 	protected byte[] key;
 	
-	public CryptoClassLoader(File zip, byte[] key) throws IOException {
-		this.file = file;
-		this.zip = new ZipFile(file);
+	public CryptoClassLoader(byte[] key, URL... urls) throws IOException {
+		super(urls);
 		this.key = key;
 	}
 	
-
 	@Override
 	protected Class<?> findClass(String name) throws ClassNotFoundException {
-		String es = name.replaceAll("\\.", "/") + ".class";
-		ZipEntry ze = new ZipEntry(es);
+		String resource = name.replaceAll("\\.", "/") + ".class";
+		URL url = findResource(resource);
 		try {
-			InputStream in = zip.getInputStream(ze);
+			InputStream in = url.openStream();
 			in = new AESInputStream(in, key);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			
@@ -42,35 +39,12 @@ public class CryptoClassLoader extends ClassLoader {
 			
 			buf = out.toByteArray();
 			return defineClass(name, buf, 0, buf.length);
-		} catch(IOException ioe) {
-			throw new ClassNotFoundException(name, ioe);
-		} catch(GeneralSecurityException gse) {
-			throw new ClassNotFoundException(name, gse);
+		} catch (IOException e) {
+			throw new ClassNotFoundException(name, e);
+		} catch (GeneralSecurityException e) {
+			throw new ClassNotFoundException(name, e);
 		}
 	}
 
-	@Override
-	protected String findLibrary(String libname) {
-		return null;
-	}
-
-	@Override
-	protected URL findResource(String name) {
-		if(zip.getEntry(name) == null)
-			return null;
-		try {
-			return new URL(file.toURL() + "!" + name);
-		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@Override
-	protected Enumeration<URL> findResources(String name) throws IOException {
-		URL url = findResource(name);
-		if(url == null)
-			return Collections.enumeration(Collections.<URL>emptyList());
-		return Collections.enumeration(Collections.singleton(url));
-	}
 
 }
