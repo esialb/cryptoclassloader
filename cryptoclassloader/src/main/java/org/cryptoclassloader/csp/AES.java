@@ -22,10 +22,10 @@ import javax.crypto.spec.SecretKeySpec;
  * @author robin
  *
  */
-class AES implements CryptoStreamProvider {
+class AES extends AbstractCryptoStreamProvider {
 	
-	private static final int KEY_SIZE = 16;
-	private static final int IV_SIZE = 16;
+	public static final int KEY_SIZE = 16;
+	public static final int IV_SIZE = 16;
 
 	/**
 	 * Convert a {@link String} to a {@code byte[]} of the appropriate
@@ -46,73 +46,17 @@ class AES implements CryptoStreamProvider {
 	}
 
 	/**
-	 * The key
-	 */
-	protected byte[] key;
-	
-	/**
 	 * Create an AES-1238 {@link CryptoStreamProvider}
 	 * @param key
 	 */
 	public AES(byte[] key) {
-		if(key.length != KEY_SIZE)
-			throw new IllegalArgumentException("Illegal key size");
-		this.key = key;
-	}
-	
-	/**
-	 * Create an AES-128 {@link CryptoStreamProvider}
-	 * @param key
-	 */
-	public AES(String key) {
-		this(toKey(key));
-	}
-	
-	/**
-	 * Returns a {@link Cipher} to decrypt an {@link InputStream}
-	 * @param in
-	 * @param key
-	 * @return
-	 * @throws IOException
-	 * @throws GeneralSecurityException
-	 */
-	private static Cipher getAesDecipher(InputStream in, byte[] key) throws IOException, GeneralSecurityException {
-		Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
-		byte[] iv = new byte[IV_SIZE];
-		in.read(iv);
-		IvParameterSpec ivps = new IvParameterSpec(iv);
-		SecretKey skey = new SecretKeySpec(key, "AES");
-		c.init(Cipher.DECRYPT_MODE, skey, ivps);
-		return c;
-	}
-	
-	@Override
-	public InputStream decrypting(InputStream in) throws IOException, GeneralSecurityException {
-		return new CipherInputStream(in, getAesDecipher(in, key));
-	}
-
-	/**
-	 * Returns a {@link Cipher} to encrypt an {@link OutputStream}
-	 * @param out
-	 * @param key
-	 * @return
-	 * @throws IOException
-	 * @throws GeneralSecurityException
-	 */
-	private static Cipher getAesEncipher(OutputStream out, byte[] key) throws IOException, GeneralSecurityException {
-		Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
-		byte[] iv = new byte[IV_SIZE];
-		new SecureRandom().nextBytes(iv);;
-		out.write(iv);
-		IvParameterSpec ivps = new IvParameterSpec(iv);
-		SecretKey skey = new SecretKeySpec(key, "AES");
-		c.init(Cipher.ENCRYPT_MODE, skey, ivps);
-		return c;
+		super(KEY_SIZE, IV_SIZE, key);
 	}
 
 	@Override
-	public OutputStream encrypting(OutputStream out) throws IOException, GeneralSecurityException {
-		return new CipherOutputStream(out, getAesEncipher(out, key));
+	protected String cipherMode() {
+		return "AES/CBC/PKCS5Padding";
 	}
+	
 
 }
