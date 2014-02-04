@@ -9,7 +9,7 @@
 		<dependency>
 			<groupId>org.cryptoclassloader</groupId>
 			<artifactId>cryptoclassloader</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
@@ -30,7 +30,7 @@
 	<parent>
 		<groupId>org.cryptoclassloader</groupId>
 		<artifactId>cryptoclassloader-parent</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1-SNAPSHOT</version>
 		<relativePath>../cryptoclassloader-parent</relativePath>
 	</parent>
 
