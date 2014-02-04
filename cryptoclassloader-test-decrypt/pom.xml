@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.cryptoclassloader</groupId>
 		<artifactId>cryptoclassloader-parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.0</version>
 		<relativePath>../cryptoclassloader-parent</relativePath>
 	</parent>
 
@@ -94,7 +94,7 @@
 		<dependency>
 			<groupId>org.cryptoclassloader</groupId>
 			<artifactId>cryptoclassloader</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
