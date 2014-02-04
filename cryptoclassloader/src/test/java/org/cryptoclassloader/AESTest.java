@@ -6,13 +6,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.cryptoclassloader.csp.CryptoStreamProvider;
+import org.cryptoclassloader.csp.CryptoStreamProviderFactories;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class AESTest {
 	@Test
 	public void testStreams() throws Exception {
-		CryptoStreamProvider aes = new AES("foo");
+		CryptoStreamProvider aes = CryptoStreamProviderFactories.getAES().newCryptoStreamProvider("foo");
 		
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		OutputStream out = aes.encrypting(bout);

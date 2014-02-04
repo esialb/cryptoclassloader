@@ -1,4 +1,4 @@
-package org.cryptoclassloader;
+package org.cryptoclassloader.csp;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +22,7 @@ import javax.crypto.spec.SecretKeySpec;
  * @author robin
  *
  */
-public class AES implements CryptoStreamProvider {
+class AES implements CryptoStreamProvider {
 	
 	private static final int KEY_SIZE = 16;
 	private static final int IV_SIZE = 16;
@@ -33,7 +33,7 @@ public class AES implements CryptoStreamProvider {
 	 * @param ascii
 	 * @return
 	 */
-	private static byte[] toKey(String ascii) {
+	public static byte[] toKey(String ascii) {
 		try {
 			MessageDigest sha1 = MessageDigest.getInstance("SHA1");
 			byte[] key = sha1.digest(ascii.getBytes("UTF-8"));

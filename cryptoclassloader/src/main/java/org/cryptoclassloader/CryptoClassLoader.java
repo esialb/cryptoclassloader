@@ -15,6 +15,10 @@ import java.util.List;
 
 import javax.crypto.CipherInputStream;
 
+import org.cryptoclassloader.csp.CryptoStreamProvider;
+
+import static org.cryptoclassloader.csp.CryptoStreamProviderFactories.*;
+
 /**
  * {@link ClassLoader} that decrypts classes and resources using AES-128
  * and {@link CipherInputStream}s.  Takes a {@link CryptoStreamProvider}
@@ -68,7 +72,7 @@ public class CryptoClassLoader extends URLClassLoader {
 	 * @throws IOException
 	 */
 	public CryptoClassLoader(byte[] key, URL... urls) throws IOException {
-		this(new AES(key), urls);
+		this(getAES().newCryptoStreamProvider(key), urls);
 	}
 	
 	/**
@@ -79,7 +83,7 @@ public class CryptoClassLoader extends URLClassLoader {
 	 * @throws IOException
 	 */
 	public CryptoClassLoader(byte[] key, ClassLoader parent, URL... urls) throws IOException {
-		this(new AES(key), parent, urls);
+		this(getAES().newCryptoStreamProvider(key), parent, urls);
 	}
 	
 	/**
@@ -89,7 +93,7 @@ public class CryptoClassLoader extends URLClassLoader {
 	 * @throws IOException
 	 */
 	public CryptoClassLoader(String key, URL... urls) throws IOException {
-		this(new AES(key), urls);
+		this(getAES().newCryptoStreamProvider(key), urls);
 	}
 	
 	/**
@@ -100,7 +104,7 @@ public class CryptoClassLoader extends URLClassLoader {
 	 * @throws IOException
 	 */
 	public CryptoClassLoader(String key, ClassLoader parent, URL... urls) throws IOException {
-		this(new AES(key), parent, urls);
+		this(getAES().newCryptoStreamProvider(key), parent, urls);
 	}
 	
 	@Override

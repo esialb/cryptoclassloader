@@ -10,6 +10,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import org.cryptoclassloader.csp.CryptoStreamProvider;
+
+import static org.cryptoclassloader.csp.CryptoStreamProviderFactories.*;
+
 /**
  * Utility class to encrypt a {@link ZipFile} to an {@link OutputStream},
  * writing a new zip file to the stream. <p>
@@ -44,11 +48,11 @@ public class CryptoZipConverter {
 	 * @param key
 	 */
 	public CryptoZipConverter(byte[] key) {
-		this(new AES(key));
+		this(getAES().newCryptoStreamProvider(key));
 	}
 	
 	public CryptoZipConverter(String key) {
-		this(new AES(key));
+		this(getAES().newCryptoStreamProvider(key));
 	}
 	
 	public CryptoZipConverter(CryptoStreamProvider crypto) {
