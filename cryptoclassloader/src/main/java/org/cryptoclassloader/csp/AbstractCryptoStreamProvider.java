@@ -20,6 +20,11 @@ abstract class AbstractCryptoStreamProvider implements CryptoStreamProvider {
 	protected int ivSize;
 	protected byte[] key;
 	
+	protected AbstractCryptoStreamProvider(int ivSize, byte[] key) {
+		this.ivSize = ivSize;
+		this.key = key;
+	}
+	
 	protected AbstractCryptoStreamProvider(int keySize, int ivSize, byte[] key) {
 		if(key.length != keySize)
 			throw new IllegalArgumentException("invalid key length");
