@@ -17,7 +17,7 @@ import org.cryptoclassloader.CryptoZipConverter;
  * Plugin to encrypt the primary artifact, suitable for use
  * with {@link CryptoClassLoader}
  * @author robin
- *
+ * @description Plugin which encrypts the contents of the primary artifact
  */
 @Mojo(name = "encrypt")
 public class EncryptMojo extends AbstractMojo {
@@ -38,6 +38,9 @@ public class EncryptMojo extends AbstractMojo {
 	@Parameter(property = "cryptoclassloader.key", required=true)
 	private String key;
 	
+	/**
+	 * The crypto algorithm to use.  Options are "aes" and "blowfish".
+	 */
 	@Parameter(property = "cryptoclassloader.algorithm", defaultValue="aes")
 	private Algorithm algorithm;
 	
