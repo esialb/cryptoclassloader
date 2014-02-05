@@ -38,6 +38,9 @@ public class EncryptMojo extends AbstractMojo {
 	@Parameter(property = "cryptoclassloader.key", required=true)
 	private String key;
 	
+	@Parameter(property = "cryptoclassloader.algorithm", defaultValue="aes")
+	private Algorithm algorithm;
+	
 	/**
 	 * Encrypt the primary artifact
 	 */
@@ -59,7 +62,7 @@ public class EncryptMojo extends AbstractMojo {
 			OutputStream out = new FileOutputStream(packaged);
 			try {
 				getLog().info("Encrypting " + precrypto.getName() + " to " + packaged.getName());
-				new CryptoZipConverter(key).convert(zf, out);
+				new CryptoZipConverter(algorithm.getCryptoFactory().newCryptoStreamProvider(key)).convert(zf, out);
 			} finally {
 				out.close();
 			}

@@ -43,18 +43,6 @@ public class CryptoZipConverter {
 	
 	protected CryptoStreamProvider crypto;
 	
-	/**
-	 * Create a new {@link ZipFile} encryptor with the specified key
-	 * @param key
-	 */
-	public CryptoZipConverter(byte[] key) {
-		this(getAES().newCryptoStreamProvider(key));
-	}
-	
-	public CryptoZipConverter(String key) {
-		this(getAES().newCryptoStreamProvider(key));
-	}
-	
 	public CryptoZipConverter(CryptoStreamProvider crypto) {
 		this.crypto = crypto;
 	}

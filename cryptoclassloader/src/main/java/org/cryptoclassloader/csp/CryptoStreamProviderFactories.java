@@ -6,6 +6,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 public class CryptoStreamProviderFactories {
+	public static final int JCE_MAX_KEY_LENGTH = 16;
+	
 	private static byte[] sha256(String ascii) {
 		try {
 			MessageDigest sha1 = MessageDigest.getInstance("SHA-256");
@@ -17,11 +19,13 @@ public class CryptoStreamProviderFactories {
 		}
 	}
 	
-	public static CryptoStreamProviderFactory getAES() {
+	public static final CryptoStreamProviderFactory getAES() {
 		return new CryptoStreamProviderFactory() {
 			@Override
 			public byte[] toKey(String ascii) {
-				return Arrays.copyOf(sha256(ascii), AES.KEY_SIZE);
+				byte[] key = Arrays.copyOf(sha256(ascii), AES.KEY_SIZE);
+				key = Arrays.copyOf(key, Math.min(key.length, JCE_MAX_KEY_LENGTH));
+				return key;
 			}
 			
 			@Override
@@ -41,7 +45,9 @@ public class CryptoStreamProviderFactories {
 			
 			@Override
 			public byte[] toKey(String ascii) {
-				return sha256(ascii);
+				byte[] key = sha256(ascii);
+				key = Arrays.copyOf(key, Math.min(key.length, JCE_MAX_KEY_LENGTH));
+				return key;
 			}
 			
 			@Override
