@@ -12,8 +12,6 @@ import java.util.zip.ZipOutputStream;
 
 import org.cryptoclassloader.csp.CryptoStreamProvider;
 
-import static org.cryptoclassloader.csp.CryptoStreamProviderFactories.*;
-
 /**
  * Utility class to encrypt a {@link ZipFile} to an {@link OutputStream},
  * writing a new zip file to the stream. <p>
