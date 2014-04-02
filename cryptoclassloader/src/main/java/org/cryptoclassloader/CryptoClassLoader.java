@@ -34,6 +34,7 @@ import static org.cryptoclassloader.csp.CryptoStreamProviderFactories.*;
  *
  */
 public class CryptoClassLoader extends URLClassLoader {
+	public static final String SUFFIX = "$ccl";
 	
 	/**
 	 * The object responsible for providing decryption streams
@@ -156,7 +157,7 @@ public class CryptoClassLoader extends URLClassLoader {
 	public URL findResource(String name) {
 		if(name.startsWith("META-INF/"))
 			return super.findResource(name);
-		return cryptoURL(super.findResource(name));
+		return cryptoURL(super.findResource(name + SUFFIX));
 	}
 	
 	@Override

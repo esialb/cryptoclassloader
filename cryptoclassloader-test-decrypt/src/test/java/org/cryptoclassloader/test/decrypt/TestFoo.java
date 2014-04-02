@@ -33,6 +33,6 @@ public class TestFoo {
 	public void testFooWithoutDecryption() throws Exception {
 		ClassLoader cl = new URLClassLoader(new URL[] {new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURI().toURL()});
 
-		Assert.assertFalse("foo".equals(IOUtils.toString(cl.getResourceAsStream("org/cryptoclassloader/test/encrypt/foo.txt"))));
+		Assert.assertFalse("foo".equals(IOUtils.toString(cl.getResourceAsStream("org/cryptoclassloader/test/encrypt/foo.txt" + CryptoClassLoader.SUFFIX))));
 	}
 }
