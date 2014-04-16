@@ -11,18 +11,14 @@ import org.junit.Test;
 public class TestFoo {
 	@Test
 	public void testFoo() throws Exception {
-		ClassLoader cl = new CryptoClassLoader(
-				"foobar", 
-				new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURI().toURL());
+		ClassLoader cl = new CryptoClassLoader("foobar", TestFoo.class.getClassLoader());
 		
 		Assert.assertEquals("foo", IOUtils.toString(cl.getResourceAsStream("org/cryptoclassloader/test/encrypt/foo.txt")));
 	}
 	
 	@Test
 	public void testFooURL() throws Exception {
-		ClassLoader cl = new CryptoClassLoader(
-				"foobar", 
-				new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURI().toURL());
+		ClassLoader cl = new CryptoClassLoader("foobar", TestFoo.class.getClassLoader());
 
 		URL foo = cl.getResource("org/cryptoclassloader/test/encrypt/foo.txt");
 		Assert.assertEquals("foo", IOUtils.toString(foo));
@@ -33,6 +29,6 @@ public class TestFoo {
 	public void testFooWithoutDecryption() throws Exception {
 		ClassLoader cl = new URLClassLoader(new URL[] {new File("target/dependency/cryptoclassloader-test-encrypt.jar").getCanonicalFile().toURI().toURL()});
 
-		Assert.assertFalse("foo".equals(IOUtils.toString(cl.getResourceAsStream("org/cryptoclassloader/test/encrypt/foo.txt"))));
+		Assert.assertFalse("foo".equals(IOUtils.toString(cl.getResourceAsStream("org/cryptoclassloader/test/encrypt/foo.txt" + CryptoClassLoader.SUFFIX))));
 	}
 }

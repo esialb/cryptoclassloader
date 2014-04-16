@@ -1,4 +1,4 @@
-package org.cryptoclassloader;
+package org.cryptoclassloader.csp;
 
 import java.io.IOException;
 import java.io.InputStream;

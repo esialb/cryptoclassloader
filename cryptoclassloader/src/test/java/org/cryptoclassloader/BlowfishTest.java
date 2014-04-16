@@ -11,10 +11,10 @@ import org.cryptoclassloader.csp.CryptoStreamProviderFactories;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class AESTest {
+public class BlowfishTest {
 	@Test
 	public void testStreams() throws Exception {
-		CryptoStreamProvider aes = CryptoStreamProviderFactories.getAES().newCryptoStreamProvider("foo");
+		CryptoStreamProvider aes = CryptoStreamProviderFactories.getBlowfish().newCryptoStreamProvider("foo");
 		
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		OutputStream out = aes.encrypting(bout);
@@ -26,4 +26,5 @@ public class AESTest {
 		Assert.assertEquals("foo", new String(IOUtils.toByteArray(in)));
 		
 	}
+
 }

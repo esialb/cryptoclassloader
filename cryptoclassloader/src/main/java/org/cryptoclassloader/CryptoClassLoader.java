@@ -15,6 +15,10 @@ import java.util.List;
 
 import javax.crypto.CipherInputStream;
 
+import org.cryptoclassloader.csp.CryptoStreamProvider;
+
+import static org.cryptoclassloader.csp.CryptoStreamProviderFactories.*;
+
 /**
  * {@link ClassLoader} that decrypts classes and resources using AES-128
  * and {@link CipherInputStream}s.  Takes a {@link CryptoStreamProvider}
@@ -30,6 +34,7 @@ import javax.crypto.CipherInputStream;
  *
  */
 public class CryptoClassLoader extends URLClassLoader {
+	public static final String SUFFIX = "$ccl";
 	
 	/**
 	 * The object responsible for providing decryption streams
@@ -68,7 +73,7 @@ public class CryptoClassLoader extends URLClassLoader {
 	 * @throws IOException
 	 */
 	public CryptoClassLoader(byte[] key, URL... urls) throws IOException {
-		this(new AES(key), urls);
+		this(getAES().newCryptoStreamProvider(key), urls);
 	}
 	
 	/**
@@ -79,7 +84,7 @@ public class CryptoClassLoader extends URLClassLoader {
 	 * @throws IOException
 	 */
 	public CryptoClassLoader(byte[] key, ClassLoader parent, URL... urls) throws IOException {
-		this(new AES(key), parent, urls);
+		this(getAES().newCryptoStreamProvider(key), parent, urls);
 	}
 	
 	/**
@@ -89,7 +94,7 @@ public class CryptoClassLoader extends URLClassLoader {
 	 * @throws IOException
 	 */
 	public CryptoClassLoader(String key, URL... urls) throws IOException {
-		this(new AES(key), urls);
+		this(getAES().newCryptoStreamProvider(key), urls);
 	}
 	
 	/**
@@ -100,7 +105,7 @@ public class CryptoClassLoader extends URLClassLoader {
 	 * @throws IOException
 	 */
 	public CryptoClassLoader(String key, ClassLoader parent, URL... urls) throws IOException {
-		this(new AES(key), parent, urls);
+		this(getAES().newCryptoStreamProvider(key), parent, urls);
 	}
 	
 	@Override
@@ -152,14 +157,17 @@ public class CryptoClassLoader extends URLClassLoader {
 	public URL findResource(String name) {
 		if(name.startsWith("META-INF/"))
 			return super.findResource(name);
-		return cryptoURL(super.findResource(name));
+		URL found = super.findResource(name + SUFFIX);
+		if(found != null)
+			return cryptoURL(found);
+		return cryptoURL(getParent().getResource(name + SUFFIX));
 	}
 	
 	@Override
 	public Enumeration<URL> findResources(String name) throws IOException {
 		if(name.startsWith("META-INF/"))
 			return super.findResources(name);
-		List<URL> urls = Collections.list(super.findResources(name));
+		List<URL> urls = Collections.list(super.findResources(name + SUFFIX));
 		for(int i = 0; i < urls.size(); i++)
 			urls.set(i, cryptoURL(urls.get(i)));
 		return Collections.enumeration(urls);

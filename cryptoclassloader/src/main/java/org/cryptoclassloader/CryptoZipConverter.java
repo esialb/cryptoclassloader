@@ -10,6 +10,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import org.cryptoclassloader.csp.CryptoStreamProvider;
+
 /**
  * Utility class to encrypt a {@link ZipFile} to an {@link OutputStream},
  * writing a new zip file to the stream. <p>
@@ -39,18 +41,6 @@ public class CryptoZipConverter {
 	
 	protected CryptoStreamProvider crypto;
 	
-	/**
-	 * Create a new {@link ZipFile} encryptor with the specified key
-	 * @param key
-	 */
-	public CryptoZipConverter(byte[] key) {
-		this(new AES(key));
-	}
-	
-	public CryptoZipConverter(String key) {
-		this(new AES(key));
-	}
-	
 	public CryptoZipConverter(CryptoStreamProvider crypto) {
 		this.crypto = crypto;
 	}
@@ -72,9 +62,12 @@ public class CryptoZipConverter {
 			if(ze.isDirectory())
 				continue;
 			InputStream in = zip.getInputStream(ze);
-			zout.putNextEntry(new ZipEntry(ze.getName()));
+			String ename = ze.getName();
+			if(!ename.startsWith("META-INF/"))
+				ename += CryptoClassLoader.SUFFIX;
+			zout.putNextEntry(new ZipEntry(ename));
 			OutputStream eout = new NoCloseOutputStream(zout);
-			if(!ze.getName().startsWith("META-INF/"))
+			if(!ename.startsWith("META-INF/"))
 				eout = crypto.encrypting(eout);
 			
 			byte[] buf = new byte[1024];

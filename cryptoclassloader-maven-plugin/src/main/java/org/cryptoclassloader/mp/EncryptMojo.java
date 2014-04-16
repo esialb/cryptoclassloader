@@ -17,7 +17,7 @@ import org.cryptoclassloader.CryptoZipConverter;
  * Plugin to encrypt the primary artifact, suitable for use
  * with {@link CryptoClassLoader}
  * @author robin
- *
+ * @description Plugin which encrypts the contents of the primary artifact
  */
 @Mojo(name = "encrypt")
 public class EncryptMojo extends AbstractMojo {
@@ -33,10 +33,16 @@ public class EncryptMojo extends AbstractMojo {
 
 	/**
 	 * The string representation of the encryption key to use.
-	 * The actual key is a truncated SHA-1 hash of this string.
+	 * The actual key is a (possibly) truncated SHA-256 hash of this string.
 	 */
 	@Parameter(property = "cryptoclassloader.key", required=true)
 	private String key;
+	
+	/**
+	 * The crypto algorithm to use.  Options are "aes" and "blowfish".
+	 */
+	@Parameter(property = "cryptoclassloader.algorithm", defaultValue="aes")
+	private Algorithm algorithm;
 	
 	/**
 	 * Encrypt the primary artifact
@@ -59,7 +65,7 @@ public class EncryptMojo extends AbstractMojo {
 			OutputStream out = new FileOutputStream(packaged);
 			try {
 				getLog().info("Encrypting " + precrypto.getName() + " to " + packaged.getName());
-				new CryptoZipConverter(key).convert(zf, out);
+				new CryptoZipConverter(algorithm.getCryptoFactory().newCryptoStreamProvider(key)).convert(zf, out);
 			} finally {
 				out.close();
 			}
